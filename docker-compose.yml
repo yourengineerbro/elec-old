@@ -35,8 +35,8 @@ services:
 #      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
 
       # Urja API credentials
-      - URJA_API_USERNAME=${API_USERNAME}
-      - URJA_API_PASSWORD=${API_PASSWORD}
+      - URJA_API_EMAIL=${URJA_API_EMAIL}
+      - URJA_API_PASSWORD=${URJA_API_PASSWORD}
 #    depends_on:
 #      mysqldb:
 #        condition: service_healthy
