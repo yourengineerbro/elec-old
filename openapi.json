@@ -1,0 +1,189 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Electrical Utilities Service API",
+    "version": "v2",
+    "description": "API documentation for electical-utilities-service including operations such as export meters, search operations of meters and transformers."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Local server"
+    }
+  ],
+  "paths": {
+    "/api/v2/export/meters": {
+      "get": {
+        "summary": "Export all meters",
+        "description": "Fetches a complete list of meters with hierarchy and coordinate details.",
+        "operationId": "exportMeters",
+        "responses": {
+          "200": {
+            "description": "Successfully exported meters as JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MeterExportResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v2/search/meters": {
+      "get": {
+        "summary": "Search meters",
+        "description": "Searches for meters based on an optional query string and a required page number.",
+        "operationId": "listMeters",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "description": "Search query filter, filtering on meterId and serialNo",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "description": "Page number for pagination",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful meters search result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MeterSearchResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v2/search/transformers": {
+      "get": {
+        "summary": "List transformers",
+        "description": "Retrieves a paginated list of transformers.",
+        "operationId": "listTransformers",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "description": "Page number for pagination",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful list of transformers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransformerResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "MeterExportResponseDto": {
+        "type": "object",
+        "properties": {
+          "meterId": { "type": "string" },
+          "serialNo": { "type": "string" },
+          "make": { "type": "string" },
+          "phaseType": { "type": "string" },
+          "installStatus": { "type": "string" },
+          "installType": { "type": "string" },
+          "build": { "type": "string" },
+          "dtCode": { "type": "string" },
+          "hierarchy": { "$ref": "#/components/schemas/Hierarchy" },
+          "geo": { "$ref": "#/components/schemas/MeterCoordinates" }
+        }
+      },
+      "Hierarchy": {
+        "type": "object",
+        "properties": {
+          "zone": { "$ref": "#/components/schemas/SubHierarchy" },
+          "circle": { "$ref": "#/components/schemas/SubHierarchy" },
+          "division": { "$ref": "#/components/schemas/SubHierarchy" },
+          "subDivision": { "$ref": "#/components/schemas/SubHierarchy" },
+          "subStation": { "$ref": "#/components/schemas/SubHierarchy" },
+          "feeder": { "$ref": "#/components/schemas/SubHierarchy" },
+          "dt": { "$ref": "#/components/schemas/SubHierarchy" }
+        }
+      },
+      "SubHierarchy": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "code": { "type": "string" }
+        }
+      },
+      "MeterCoordinates": {
+        "type": "object",
+        "properties": {
+          "lat": { "type": "string" },
+          "lng": { "type": "string" }
+        }
+      },
+      "MeterSearchResponseDto": {
+        "type": "object",
+        "properties": {
+          "meterId": { "type": "string" },
+          "serialNo": { "type": "string" },
+          "make": { "type": "string" },
+          "phaseType": { "type": "string" },
+          "installStatus": { "type": "string" },
+          "dtCode": { "type": "string" }
+        }
+      },
+      "TransformerResponseDto": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string" },
+          "name": { "type": "string" },
+          "feederCode": { "type": "string" },
+          "capacityKva": { "type": "string" }
+        }
+      }
+    }
+  }
+}
